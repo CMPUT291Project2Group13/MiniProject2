@@ -18,4 +18,3 @@ def connect(path):
 
 def disconnect():
 	conn.close()
-
