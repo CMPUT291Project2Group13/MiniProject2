@@ -63,7 +63,7 @@ def decompose_RHS(FdDict):
 	return FdDict
 
 
-def remove_trivial_fd(FdDict):  
+def remove_trivial_fd(FdDict):      ########ok to remove trivial ones????
 	#such that Y: X inters. Y = empty set
 	for key in FdDict:
 		step = 0
@@ -78,24 +78,52 @@ def remove_trivial_fd(FdDict):
 
 
 def check_if_superkey(superkey_closure, Fds):
-	# -checks if it's a superkey (if all attributes are in closure)
+	# -checks if it's a superkey (i.e. if all attributes are in closure)
 	closure = []
-	BCNF = []
+	BCNF_tf = [] #list showing if attr are in BCNF (=superkey/trivial)...stores True or False for each attr
 	superkey = False
 	for i in range(len(Fds[0])):
-		pot_superkey = copy.copy(Fds[0][i]) #using copy to not overwrite the list
+		pot_superkey = copy.copy(Fds[0][i]) #using copy to not overwrite the original list
+		##print('potential superkey: ') 
+		##print(pot_superkey) 		
 		closure = get_attr_closure(pot_superkey, Fds)
 		if len(superkey_closure) == len(closure):
 			superkey = True
 		else:
 			superkey = False
-		BCNF.append(superkey)   
+		BCNF_tf.append(str(superkey)) 
 		
+
+		##print('closure: ') 
+		##print(closure) 
+
 		
 		###returning a list like this [False, False, False, False, True, False, False, False, False]
 		
+	return BCNF_tf
+	
+def decompose_schema(BCNF_tf,temp_attr_ls,temp_fd_ls):
+	#temp_attr_ls contains all attr minus the ones we already removed and put in separate table
+	print(BCNF_tf)
+	print(temp_attr_ls)
+	print(temp_fd_ls)
+	idx = BCNF_tf.index('False')   #gives index of 1st occurence
+	attr_LHS = temp_attr_ls[idx] #=attr that violates BCNF...str
+	Fd_LHS_ls = []
+	Fd_RHS_ls = []
+	step = 0
+	for j in range(len(temp_fd_ls[0])):
+		i = j = step
+		if temp_fd_ls[0][i] == [attr_LHS]:
+			remove = temp_fd_ls[0].pop(i)
+			Fd_LHS_ls.append(remove)  #removes attr that violates BCFN from LHS
+			remove = temp_fd_ls[1].pop(i)
+			Fd_RHS_ls.append(remove)
+			step = step + 1
 	
 	
+	
+	return temp_attr_ls, temp_fd_ls
 	
 	
 	
@@ -111,7 +139,7 @@ def get_attr_closure(pot_superkey, Fds):
 				for attr in Fds[0][i]:
 					if attr in closure:
 						counter = counter + 1 #counter = lenFds only if all attr of LHS attr list are in closure
-				if counter == len(Fds[0][i]) and Fds[1][i] not in closure:
+				if counter == len(Fds[0][i]) and Fds[1][i] not in closure: #=all attr on LHS in closure...so we can add RHS to closure
 					closure.append(Fds[1][i])
 			
 		len_closure_after = len(closure)
@@ -151,13 +179,19 @@ def main():
 	schema = choose_schema(attrDict) 
 	
 	
-	####put this in a loop..
-	check_if_superkey(attrDict[schema], FdDict[schema])
+	BCNF_tf = ['False']
+	temp_attr_ls = copy.copy(attrDict[schema])  #will update with each iteration...delete attr that we have removed from schema
+	temp_fd_ls = copy.copy(FdDict[schema])  #will update with each iteration...delete fds that we have removed from schema
 	
+	while 'False' in BCNF_tf:
+		BCNF_tf = check_if_superkey(temp_attr_ls, temp_fd_ls) #returning [False, False, True, False]
+		temp_attr_ls,temp_fd_ls = decompose_schema(BCNF_tf,temp_attr_ls,temp_fd_ls)
+		break ###
 	
 	
 
 if __name__ == "__main__":
 	main()
 
+	
 	
