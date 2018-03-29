@@ -22,7 +22,7 @@ def normalize_schema(attrDict,FdDict):
 	Decomp.append(temp_schema)
 	remove_dupes(Decomp)
 	fill_table.write_to_output(Decomp)
-	print('\n ***Normalization successfull***\n')
+	print('\n ***Normalization successful***\n')
 	time.sleep(1.5)
 	return 
 
