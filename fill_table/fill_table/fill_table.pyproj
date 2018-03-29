@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>290d3341-4fbc-4b2d-bfe2-ff34bbefcc0d</ProjectGuid>
+    <ProjectGuid>e31705a7-7cff-4d6b-9ad7-4aac6cbc8530</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>print.py</StartupFile>
+    <StartupFile>fill_table.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>print</Name>
-    <RootNamespace>print</RootNamespace>
+    <Name>fill_table</Name>
+    <RootNamespace>fill_table</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="print.py" />
+    <Compile Include="fill_table.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
