@@ -8,7 +8,7 @@ def normalize_schema(attrDict,FdDict):
 	# -returns a list of lists (1 list for each BCNF schema)
 	schema = choose_schema(attrDict)
 	temp_attr_ls = copy.copy(attrDict[schema])  
-	temp_fd_ls = copy.copy(FdDict[schema])  
+	temp_fd_ls = copy.deepcopy(FdDict[schema])  
 	BCNF_tf = check_if_superkey(temp_attr_ls, temp_fd_ls) #eg [False, False, True, False] where False = not a superkey (is in order of LHS attributes)
 	new_BCNF_schema = []
 	temp_schema = [schema,temp_attr_ls,temp_fd_ls]
