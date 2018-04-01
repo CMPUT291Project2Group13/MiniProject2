@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>abbabd67-dc94-43cd-b95f-69ba0dbfa9ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>EquivalenceOfFD.py.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,7 +22,53 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="EquivalenceOfFD.py.py" />
+    <Compile Include="connectDB.py" />
+    <Compile Include="connectDB\connectDB\connectDB.py" />
+    <Compile Include="EquivalenceOfFD.py" />
+    <Compile Include="fill_table.py" />
+    <Compile Include="fill_table\fill_table\fill_table.py" />
+    <Compile Include="main.py" />
+    <Compile Include="main\main\main.py" />
+    <Compile Include="normalize.py" />
+    <Compile Include="normalize\normalize\normalize.py" />
+    <Compile Include="readData.py" />
+    <Compile Include="readData\readData\readData.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="connectDB\" />
+    <Folder Include="connectDB\connectDB\" />
+    <Folder Include="fill_table\" />
+    <Folder Include="fill_table\fill_table\" />
+    <Folder Include="main\" />
+    <Folder Include="main\.vs\" />
+    <Folder Include="main\.vs\main\" />
+    <Folder Include="main\.vs\main\v14\" />
+    <Folder Include="main\main\" />
+    <Folder Include="normalize\" />
+    <Folder Include="normalize\.vs\" />
+    <Folder Include="normalize\.vs\normalize\" />
+    <Folder Include="normalize\.vs\normalize\v14\" />
+    <Folder Include="normalize\normalize\" />
+    <Folder Include="readData\" />
+    <Folder Include="readData\.vs\" />
+    <Folder Include="readData\.vs\readData\" />
+    <Folder Include="readData\.vs\readData\v14\" />
+    <Folder Include="readData\readData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="connectDB\connectDB.sln" />
+    <Content Include="connectDB\connectDB\connectDB.pyproj" />
+    <Content Include="fill_table\fill_table.sln" />
+    <Content Include="fill_table\fill_table\fill_table.pyproj" />
+    <Content Include="main\.vs\main\v14\.suo" />
+    <Content Include="main\main.sln" />
+    <Content Include="main\main\main.pyproj" />
+    <Content Include="normalize\.vs\normalize\v14\.suo" />
+    <Content Include="normalize\normalize.sln" />
+    <Content Include="normalize\normalize\normalize.pyproj" />
+    <Content Include="readData\.vs\readData\v14\.suo" />
+    <Content Include="readData\readData.sln" />
+    <Content Include="readData\readData\readData.pyproj" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
