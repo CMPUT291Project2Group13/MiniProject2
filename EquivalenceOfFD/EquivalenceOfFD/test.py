@@ -1,12 +1,16 @@
 
 
 def main():
-	set1 = ['{A,B,H}=>{E,G};', '{A}=>{D}']
-	set = determination(set1)
+	set1 = ['{A,B,H}=>{E,G};', '{A}=>{D};', '{A}=>{c}']
+	set, key = determination(set1)
 	print(set)
+	print(key)
 
 def determination(set):
 	result = []
+	lhsList = []
+	check = []
+
 	for item in set:
 		wrapper = []
 		lhs = []
@@ -19,7 +23,17 @@ def determination(set):
 		rhs = twoSideList[1].split(",")
 		wrapper = [lhs, rhs]
 		result.append(wrapper)
-	return result
+		lhsStr = str(twoSideList[0])
+		lhsStr = lhsStr.replace(",", "")
+		lhsList.append(lhsStr)
+
+	for i in lhsList:
+		if i in check:
+			continue
+		else:
+			check.append(i)
+
+	return result, check
 
 
 if __name__ == "__main__":

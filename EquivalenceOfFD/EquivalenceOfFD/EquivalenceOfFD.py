@@ -13,7 +13,8 @@ class EquivalenceOfFD:
 		secondSet = []
 		schemasSelectedOne = []	
 		schemasSelectedTwo = []	
-		superKey = []
+		superKeyOne = []
+		superKeyTwo = []
 		menuHeader = ['\n','#'*65,'MENU'.center(63),'#'*65]
 		menuList = ['1- enter schema for F1 set\n','2- enter schema for F2 set\n', '3- confirm\n', '4- Exit\n']
 
@@ -26,11 +27,11 @@ class EquivalenceOfFD:
 			option = input('Please enter a number to select one of the options listed above:' )
 
 			if option == '1':
-				returnDataList, newSchemas, superKey1 = self.option(schemasSelectedOne)
-				superKey.append(superKey1)
-				print("Attributes: " + str(superKey1))
-				schemasSelectedOne = newSchemas
+				returnDataList, newSchemas, key = self.option(schemasSelectedOne)
 				if returnDataList != None:
+					superKeyOne.extend(key)
+					print("Attributes: " + str(superKeyOne))
+					schemasSelectedOne = newSchemas
 					if not firstSet:
 						firstSet = returnDataList
 					else:		
@@ -38,11 +39,11 @@ class EquivalenceOfFD:
 					print("First set: " + str(firstSet))
 
 			elif option == '2':
-				returnDataList, newSchemas, superKey2 = self.option(schemasSelectedTwo)
-				superKey.append(superKey2)
-				print("Attributes:" + str(superKey2))
-				schemasSelectedOne = newSchemas
+				returnDataList, newSchemas, key = self.option(schemasSelectedTwo)
 				if returnDataList != None:
+					superKeyTwo.extend(key)
+					print("Attributes:" + str(superKeyTwo))
+					schemasSelectedOne = newSchemas
 					if not firstSet:
 						secondSet = returnDataList
 					else:		
@@ -52,8 +53,8 @@ class EquivalenceOfFD:
 			elif option == '3':
 				firstSet.sort()
 				secondSet.sort()
-				newSet1 = self.determination(firstSet)
-				newSet2 = self.determination(secondSet)
+				newSet1, key1 = self.determination(firstSet)
+				newSet2, key2 = self.determination(secondSet)
 				print("First set: " + str(newSet1))
 				print("Second set: " + str(newSet2))
 
@@ -63,14 +64,21 @@ class EquivalenceOfFD:
 				if not newSet2:
 					print("second set is empty")
 					return
-				keyOne = str(superKey[0]).split(",")
-				keyTwo = str(superKey[1]).split(",")
-				print("superkey 0 and 1: " + str(keyOne) + str(keyTwo))
-				firstClosure = normalize.get_attr_closure(superKey[0], newSet1)
-				secondClosure = normalize.get_attr_closure(superKey[1], newSet2)
+#				keyOne = str(superKeyOne).split(",")
+#				keyTwo = str(superKeyTwo).split(",")
+#				print("superkey one: " + str(keyOne) + "superkey two: "+ str(keyTwo))
+				print("key1" + str(key1))
+				print("key2" + str(key2))
+				firstClosure = normalize.get_attr_closure(key1, newSet2)
+				secondClosure = normalize.get_attr_closure(key2, newSet1)
 				print("First closure: "+ str(firstClosure))
 				print("Second closure: " + str(secondClosure))
-				return
+				if firstClosure == secondClosure:
+					print("Two sets are equivalent")
+					return
+				else:
+					print("Two sets are not equivalent")
+					return
 
 			elif option == '4':
 				break
@@ -100,7 +108,7 @@ class EquivalenceOfFD:
 			if not data:
 				print ("invalid input")
 				schemasSelected.remove(schemas)
-				return None, schemasSelected
+				return None, schemasSelected, None
 
 			dataList = []
 			for i in data[0]:
@@ -117,6 +125,9 @@ class EquivalenceOfFD:
 
 	def determination(self, set):
 		result = []
+		lhsList = []
+		check = []
+
 		for item in set:
 			wrapper = []
 			lhs = []
@@ -129,4 +140,14 @@ class EquivalenceOfFD:
 			rhs = twoSideList[1].split(",")
 			wrapper = [lhs, rhs]
 			result.append(wrapper)
-		return result
+			lhsStr = str(twoSideList[0])
+#			lhsStr = lhsStr.replace(",", "")  #if dont need comma, take comment sign out
+			lhsList.append(lhsStr)
+
+		for i in lhsList:
+			if i in check:
+				continue
+			else:
+				check.append(i)
+
+		return result, check
