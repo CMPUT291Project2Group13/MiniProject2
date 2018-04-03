@@ -1,5 +1,6 @@
 import connectDB
 import normalize
+import copy
 
 class EquivalenceOfFD:
 
@@ -8,13 +9,17 @@ class EquivalenceOfFD:
 		self.EquivalenceOfFD()
 		return
 
-	def main(self):
+	def main(self, FdDict):
 		firstSet = []
 		secondSet = []
+		leftSet = []
+		rightSet = []
 		schemasSelectedOne = []	
 		schemasSelectedTwo = []	
 		superKeyOne = []
 		superKeyTwo = []
+		firstSetSchemas = []
+		secondSetSchemas = []
 		menuHeader = ['\n','#'*65,'MENU'.center(63),'#'*65]
 		menuList = ['1- enter schema for F1 set\n','2- enter schema for F2 set\n', '3- confirm\n', '4- Exit\n']
 
@@ -27,10 +32,9 @@ class EquivalenceOfFD:
 			option = input('Please enter a number to select one of the options listed above:' )
 
 			if option == '1':
-				returnDataList, newSchemas, key = self.option(schemasSelectedOne)
+				returnDataList, newSchemas, choice = self.option(schemasSelectedOne)
 				if returnDataList != None:
-					superKeyOne.extend(key)
-					print("Attributes: " + str(superKeyOne))
+					firstSetSchemas.append(choice)
 					schemasSelectedOne = newSchemas
 					if not firstSet:
 						firstSet = returnDataList
@@ -39,10 +43,9 @@ class EquivalenceOfFD:
 					print("First set: " + str(firstSet))
 
 			elif option == '2':
-				returnDataList, newSchemas, key = self.option(schemasSelectedTwo)
+				returnDataList, newSchemas, choice = self.option(schemasSelectedTwo)
 				if returnDataList != None:
-					superKeyTwo.extend(key)
-					print("Attributes:" + str(superKeyTwo))
+					secondSetSchemas.append(choice)
 					schemasSelectedOne = newSchemas
 					if not firstSet:
 						secondSet = returnDataList
@@ -53,32 +56,37 @@ class EquivalenceOfFD:
 			elif option == '3':
 				firstSet.sort()
 				secondSet.sort()
+				setOneList = []
+				setTwoList = []
 				newSet1, key1 = self.determination(firstSet)
 				newSet2, key2 = self.determination(secondSet)
-				print("First set: " + str(newSet1))
-				print("Second set: " + str(newSet2))
 
-				if not newSet1:
-					print("first set is empty")
-					return
-				if not newSet2:
-					print("second set is empty")
-					return
-#				keyOne = str(superKeyOne).split(",")
-#				keyTwo = str(superKeyTwo).split(",")
-#				print("superkey one: " + str(keyOne) + "superkey two: "+ str(keyTwo))
-				print("key1" + str(key1))
-				print("key2" + str(key2))
-				firstClosure = normalize.get_attr_closure(key1, newSet2)
-				secondClosure = normalize.get_attr_closure(key2, newSet1)
-				print("First closure: "+ str(firstClosure))
-				print("Second closure: " + str(secondClosure))
-				if firstClosure == secondClosure:
-					print("Two sets are equivalent")
-					return
-				else:
-					print("Two sets are not equivalent")
-					return
+				for item in firstSetSchemas:
+					setOneList.append(copy.copy(FdDict[item]))
+				for item in secondSetSchemas:
+					setTwoList.append(copy.copy(FdDict[item]))
+				index = 0
+				for newList in setOneList:
+					subIndex = 0
+					for item in newList[0]:
+						closure = normalize.get_attr_closure(item, setTwoList[index])
+						if newList[1][subIndex] not in closure:
+							print("Sets are not equivalent")
+							return
+						subIndex = subIndex + 1
+					index = index + 1
+
+				index = 0
+				for newList in setTwoList:
+					subIndex = 0
+					for item in newList[0]:
+						closure = normalize.get_attr_closure(item, setOneList[index])
+						if newList[1][subIndex] not in closure:
+							print("Sets are not equivalent")
+							return
+						subIndex = subIndex + 1
+					index = index + 1
+				print("Sets are equivalent")	
 
 			elif option == '4':
 				break
@@ -90,14 +98,16 @@ class EquivalenceOfFD:
 		print("please choose from the following schemas")
 		connectDB.c.execute('''SELECT name 
 								FROM InputRelationSchemas ''')
-		data =  connectDB.c.fetchall()
+		names =  connectDB.c.fetchall()
 
-		print(data)
+		print(names)
 
 		schemas = input("please choose the schemas: ")
+
+
 		if schemas in schemasSelected:
 			print("The schema is already in selection")
-			return None, schemasSelected
+			return None, schemasSelected, None
 		schemasSelected.append(schemas)
 		schemaList = schemas.split(",")
 		for item in schemaList:
@@ -121,7 +131,7 @@ class EquivalenceOfFD:
 								WHERE I.name = :name''',{"name":schemas})
 		attributes =  connectDB.c.fetchall()
 
-		return newList, schemasSelected, attributes
+		return newList, schemasSelected, schemas
 
 	def determination(self, set):
 		result = []
@@ -151,3 +161,4 @@ class EquivalenceOfFD:
 				check.append(i)
 
 		return result, check
+

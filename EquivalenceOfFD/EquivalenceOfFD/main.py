@@ -48,8 +48,9 @@ def main():
 		#elif opt == '2':
 			#get attribute closure
 		elif opt == '3':
+			newList = copy.copy(FdDict["Person"])
 			E = EquivalenceOfFD.EquivalenceOfFD()
-			E.main()
+			E.main(FdDict)
 		elif opt == '4':
 			exit_program()
 
