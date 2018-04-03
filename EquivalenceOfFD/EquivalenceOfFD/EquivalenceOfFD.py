@@ -5,7 +5,7 @@ class EquivalenceOfFD:
 
 
 	def _init_(self):
-		self.EquivalenceOfFD()
+		self.main()
 		return
 
 	def main(self):
