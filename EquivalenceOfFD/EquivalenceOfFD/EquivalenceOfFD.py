@@ -33,7 +33,9 @@ class EquivalenceOfFD:
 
 			if option == '1':
 				returnDataList, newSchemas, choice = self.option(schemasSelectedOne)
-				if returnDataList != None:
+				if returnDataList == None:
+					return
+				else:
 					firstSetSchemas.append(choice)
 					schemasSelectedOne = newSchemas
 					if not firstSet:
@@ -44,7 +46,9 @@ class EquivalenceOfFD:
 
 			elif option == '2':
 				returnDataList, newSchemas, choice = self.option(schemasSelectedTwo)
-				if returnDataList != None:
+				if returnDataList == None:
+					return
+				else:
 					secondSetSchemas.append(choice)
 					schemasSelectedOne = newSchemas
 					if not firstSet:
@@ -60,6 +64,8 @@ class EquivalenceOfFD:
 				setTwoList = []
 				newSet1, key1 = self.determination(firstSet)
 				newSet2, key2 = self.determination(secondSet)
+				list(set(firstSetSchemas))
+				list(set(secondSetSchemas))
 
 				for item in firstSetSchemas:
 					setOneList.append(copy.copy(FdDict[item]))

@@ -27,6 +27,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="connectDB.py" />
+    <Compile Include="dependency.py" />
     <Compile Include="EquivalenceOfFD.py" />
     <Compile Include="fill_table.py" />
     <Compile Include="main.py" />
