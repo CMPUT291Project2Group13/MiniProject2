@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>c84e00c4-991f-45d4-a932-b29fe88e6b5f</ProjectGuid>
+    <ProjectGuid>0d45360a-9e25-479c-b1e9-2e9dfa1ebdd2</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>normalize_modified.py</StartupFile>
     <SearchPath>
