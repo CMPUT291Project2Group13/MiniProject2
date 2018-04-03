@@ -27,6 +27,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="connectDB.py" />
+    <Compile Include="dependency.py" />
     <Compile Include="EquivalenceOfFD.py" />
     <Compile Include="fill_table.py" />
     <Compile Include="main.py" />
@@ -35,6 +36,7 @@
     <Compile Include="test.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="user_attr_closure.py" />
   </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
   <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

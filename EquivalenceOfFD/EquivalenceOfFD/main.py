@@ -7,6 +7,7 @@ import readData
 import normalize
 import fill_table
 import EquivalenceOfFD
+import user_attr_closure
 
 ####delete the delete command in write_to_output before submitting!!
 ####################################################################
@@ -45,11 +46,12 @@ def main():
 		opt = main_menu()
 		if opt == '1':			
 			normalize.normalize_schema(attrDict,FdDict)		
-		#elif opt == '2':
-			#get attribute closure
+		elif opt == '2':
+			user_attr_closure.get_closure(attrDict,FdDict)
 		elif opt == '3':
+			newList = copy.copy(FdDict["Person"])
 			E = EquivalenceOfFD.EquivalenceOfFD()
-			E.main()
+			E.main(FdDict)
 		elif opt == '4':
 			exit_program()
 
