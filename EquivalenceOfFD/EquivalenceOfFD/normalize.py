@@ -2,13 +2,14 @@ import copy
 import readData
 import fill_table
 import time
+import dependency 
 
 def normalize_schema(attrDict,FdDict):
 	# -normalizes schema to BCNF
 	# -returns a list of lists (1 list for each BCNF schema)
 	schema = choose_schema(attrDict)
 	temp_attr_ls = copy.copy(attrDict[schema])  
-	temp_fd_ls = copy.deepcopy(FdDict[schema])  
+	temp_fd_ls = copy.deepcopy(FdDict[schema])
 	BCNF_tf = check_if_superkey(temp_attr_ls, temp_fd_ls) #eg [False, False, True, False] where False = not a superkey (is in order of LHS attributes)
 	new_BCNF_schema = []
 	temp_schema = [schema,temp_attr_ls,temp_fd_ls]
@@ -23,6 +24,7 @@ def normalize_schema(attrDict,FdDict):
 	remove_dupes(Decomp)
 	fill_table.write_to_output(Decomp)
 	print('\n ***Normalization successful***\n')
+	dependency.checkDependency(schema,FdDict,Decomp)
 	time.sleep(1.5)
 	return 
 
@@ -136,6 +138,7 @@ def remove_trivial_fd(Decomp):
 					triv_attr = schema[2][1][i]
 					idx = schema[2][0][j].index(triv_attr)
 					schema[2][0][j].pop(idx)
+	
 	return 
 
 
