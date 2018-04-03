@@ -21,8 +21,6 @@ def normalize_schema(attrDict,FdDict):
 	remove_trivial_fd(Decomp)	
 	temp_schema = add_trivial_attr(temp_schema)
 	Decomp.append(temp_schema)
-	print('DECOMP')
-	print(Decomp)
 	Decomp_pres = copy.deepcopy(Decomp) #includes duplicate FDs...using this for dependency preservation check later
 	remove_dupes(Decomp)
 	fill_table.write_to_output(Decomp)
