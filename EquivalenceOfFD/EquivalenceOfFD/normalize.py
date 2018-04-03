@@ -3,6 +3,7 @@ import readData
 import fill_table
 import time
 import dependency 
+import newtables
 
 def normalize_schema(attrDict,FdDict):
 	# -normalizes schema to BCNF
@@ -24,7 +25,9 @@ def normalize_schema(attrDict,FdDict):
 	remove_dupes(Decomp)
 	fill_table.write_to_output(Decomp)
 	print('\n ***Normalization successful***\n')
+	
 	dependency.checkDependency(schema,FdDict,Decomp)
+	newtables.createTables(schema,Decomp)
 	time.sleep(1.5)
 	return 
 
