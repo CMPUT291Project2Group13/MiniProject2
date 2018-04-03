@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "normalize_modified", "normalize_modified\normalize_modified.pyproj", "{C84E00C4-991F-45D4-A932-B29FE88E6B5F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C84E00C4-991F-45D4-A932-B29FE88E6B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C84E00C4-991F-45D4-A932-B29FE88E6B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BAA5DADC-83BE-45CC-BEB3-B56B51D78677}
+	EndGlobalSection
+EndGlobal
