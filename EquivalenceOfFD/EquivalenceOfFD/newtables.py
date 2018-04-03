@@ -17,7 +17,7 @@ def createTables(schema,Decomp):
 def addTable(schema,attr):
     print(attr)
     foreignKey[attr[0]] = []
-    sqlCommand = 'CREATE TABLE '
+    sqlCommand = 'CREATE TABLE IF NOT EXISTS'
     schName = attr[0] + ' ( '
     sqlCommand = sqlCommand + schName
     for item in attr[1]:
