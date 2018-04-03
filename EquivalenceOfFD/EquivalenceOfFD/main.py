@@ -37,7 +37,7 @@ def exit_program():
 	
 	
 def main():
-	path = './mini-project2-Example.sqliteDB'# './' + input('Please enter the name of the database file you would like to connect to: ')
+	path = './' + input('Please enter the name of the database file you would like to connect to: ')
 	connectDB.connect(path) 
 	attrDict, FdDict = readData.read_tables()
 	

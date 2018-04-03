@@ -27,10 +27,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="connectDB.py" />
-    <Compile Include="dependency.py" />
     <Compile Include="EquivalenceOfFD.py" />
     <Compile Include="fill_table.py" />
     <Compile Include="main.py" />
+    <Compile Include="newtables.py" />
     <Compile Include="normalize.py" />
     <Compile Include="readData.py" />
     <Compile Include="test.py">

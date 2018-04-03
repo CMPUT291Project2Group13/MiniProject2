@@ -2,8 +2,7 @@ import copy
 import readData
 import fill_table
 import time
-import dependency 
-import newtables
+
 
 def normalize_schema(attrDict,FdDict):
 	# -normalizes schema to BCNF
@@ -16,19 +15,17 @@ def normalize_schema(attrDict,FdDict):
 	temp_schema = [schema,temp_attr_ls,temp_fd_ls]
 	Decomp = []   
 	while 'False' in BCNF_tf:
-		new_BCNF_schema, temp_schema = decompose_schemas(BCNF_tf,schema,temp_schema[1], temp_schema[2])
+		new_BCNF_schema, temp_schema = decompose_schemas(BCNF_tf,schema,temp_schema[1], temp_schema[2])		
 		Decomp.append(new_BCNF_schema)
-		BCNF_tf = check_if_superkey(temp_schema[1], temp_schema[2]) 
+		BCNF_tf = check_if_superkey(temp_schema[1], temp_schema[2])
 	remove_trivial_fd(Decomp)	
 	temp_schema = add_trivial_attr(temp_schema)
 	Decomp.append(temp_schema)
+	Decomp_pres = copy.deepcopy(Decomp) #includes duplicate FDs...using this for dependency preservation check later
 	remove_dupes(Decomp)
 	fill_table.write_to_output(Decomp)
-	print('\n ***Normalization successful***\n')
+	check_dependency_preservation(Decomp_pres,copy.deepcopy(FdDict[schema]))
 	
-	dependency.checkDependency(schema,FdDict,Decomp)
-	newtables.createTables(schema,Decomp)
-	time.sleep(1.5)
 	return 
 
 
@@ -56,7 +53,6 @@ def check_if_superkey(superkey_closure, Fds):
 	superkey = False
 	for i in range(len(Fds[0])):
 		pot_superkey = copy.copy(Fds[0][i]) #using copy to not overwrite the original list
-			
 		closure = get_attr_closure(pot_superkey, Fds)
 		if len(superkey_closure) == len(closure):
 			superkey = True
@@ -91,26 +87,28 @@ def decompose_schemas(BCNF_tf,schema,temp_attr_ls, temp_fd_ls):
 	# new_BCNF_schema is the schema containing the attributes that violated BCNF in the original schema
 	# temp_schema is the schema with the remaining attributes
 	idx = BCNF_tf.index('False')
-	viol_LHS_attr = temp_fd_ls[0][idx] 
+	viol_LHS_attr = temp_fd_ls[0][idx]
 	new_LHS_attr = []
 	new_RHS_attr = []
 	step = 0
 	for i in range(len(temp_fd_ls[0])):
 		j = i - step
 		if temp_fd_ls[0][j] == viol_LHS_attr:
-			new_LHS_attr.append(temp_fd_ls[0].pop(j))			
+			new_LHS_attr.append(temp_fd_ls[0].pop(j))
 			RHS_attr = temp_fd_ls[1].pop(j)
 			new_RHS_attr.append(RHS_attr)
 			if RHS_attr not in new_LHS_attr:
 				idx = temp_attr_ls.index(RHS_attr)
 				temp_attr_ls.pop(idx)
-			step = step + 1		
+			step = step + 1	
 	new_BCNF_attr_ls = copy.copy(viol_LHS_attr)
 	for attr in new_RHS_attr:
 		if attr not in new_BCNF_attr_ls:
 			new_BCNF_attr_ls.append(attr)
 	new_BCNF_schema_name = schema
-	for attr in new_BCNF_attr_ls:
+	new_BCNF_attr_ls_alpha = copy.copy(new_BCNF_attr_ls)
+	new_BCNF_attr_ls_alpha.sort()   #because they now changed order to alphabetical.....
+	for attr in new_BCNF_attr_ls_alpha:
 		new_BCNF_schema_name = new_BCNF_schema_name + '_' + attr
 	new_BCNF_schema = [new_BCNF_schema_name,new_BCNF_attr_ls,[new_LHS_attr,new_RHS_attr]]
 	for item in new_RHS_attr:	
@@ -126,7 +124,9 @@ def decompose_schemas(BCNF_tf,schema,temp_attr_ls, temp_fd_ls):
 				temp_fd_ls[1].pop(j)
 				step = step + 1
 	temp_schema_name = schema
-	for attr in temp_attr_ls:
+	temp_attr_ls_alpha = copy.copy(temp_attr_ls)   #because they now changed the order to alphabetical.......
+	temp_attr_ls_alpha.sort()
+	for attr in temp_attr_ls_alpha:  
 		temp_schema_name = temp_schema_name + '_' + attr
 	temp_schema =  [temp_schema_name,temp_attr_ls,[temp_fd_ls[0],temp_fd_ls[1]]]
 	return new_BCNF_schema, temp_schema
@@ -141,12 +141,11 @@ def remove_trivial_fd(Decomp):
 					triv_attr = schema[2][1][i]
 					idx = schema[2][0][j].index(triv_attr)
 					schema[2][0][j].pop(idx)
-	
 	return 
 
 
 def add_trivial_attr(temp_schema):
-	# -add the trivial FDs (only needed for last schema in BCNF normalization process)
+	# -add the trivial FDs (only needed for last schema in BCNF normalization process if RHS is empty set)
 	# -returns the modified temp_schema
 	if len(temp_schema[2][0]) == 0:
 		for i in range(len(temp_schema[1])):
@@ -154,7 +153,8 @@ def add_trivial_attr(temp_schema):
 			temp_schema[2][0].append(attributes)
 			temp_schema[2][1] = attributes
 	return temp_schema
-
+        
+        
 def remove_dupes(Decomp):
 	#removes duplicate entries in the LHS attr list	
 	for schema in Decomp:
@@ -163,4 +163,41 @@ def remove_dupes(Decomp):
 			if item not in no_dupes_ls:
 				no_dupes_ls.append(item)
 		schema[2][0] = copy.copy(no_dupes_ls)
+
+	return
+
+
+def check_dependency_preservation(Decomp_schemas, original_fds):
+	# -Decomp_pres is the decomposition of the schema including all LHS duplicates, eg SSN->Name,SSN->Address
+	orig_fds_closure = []
+	for LHS_attr in original_fds[0]:
+		attr_closure = get_attr_closure(LHS_attr,original_fds)
+		for attr in attr_closure:
+			if attr not in orig_fds_closure:
+				orig_fds_closure.append(attr)
+	orig_fds_closure.sort()
+	
+	#get Decomp attr closure
+	LHS_attrs = []
+	RHS_attrs = []
+	for i in range(len(Decomp_schemas)): #get FD set unions
+		for idx in range(len(Decomp_schemas[i][2][0])):
+			LHS_attrs.append(Decomp_schemas[i][2][0][idx])
+			RHS_attrs.append(Decomp_schemas[i][2][1][idx])
+	Decomp_FD_union = [LHS_attrs,RHS_attrs]	
+	Decomp_closure = []
+	for LHS_attr in LHS_attrs:
+		attr_closure = get_attr_closure(LHS_attr,Decomp_FD_union)
+		for attr in attr_closure:
+			if attr not in Decomp_closure:
+				Decomp_closure.append(attr)
+	Decomp_closure.sort()
+	if orig_fds_closure == Decomp_closure:
+		print('\n***********Normalization completed***********\nThis decomposition is dependency perserving.\n')
+		time.sleep(1.5)
+	else:
+		print('\n***********Normalization completed***********\nThis decomposition is not dependency preserving.\n')	
+		print('This decomposition is not dependency preserving.\n')
+		time.sleep(1.5)
+		
 	return
